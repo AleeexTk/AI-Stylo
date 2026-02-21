@@ -41,3 +41,13 @@ AI-Stylo — це система, побудована за парадигмою
 
 ---
 *Створено згідно з безпечними канонами розробки EvoPyramid (з ізоляцією за Identity Manifest).*
+
+## 🔒 Контроль доступу (Access Control)
+
+Цей репозиторій є самостійним проектом **AI-Stylo** (powered by EvoPyramid init).
+Доступ до репозиторію та права на внесення змін мають лише дві особи:
+
+* [@AleeexTk](https://github.com/AleeexTk)
+* [@sergiiriabokon](https://github.com/sergiiriabokon)
+
+Доступ безпосередньо до ядра `EvoPyramid` з цього репозиторію закрито.

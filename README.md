@@ -41,3 +41,13 @@ With AI-Stylo, one backend orchestrates entirely different user experiences:
 
 ---
 *Built according to safe EvoPyramid practices (Security + isolation).*
+
+## 🔒 Access Control
+
+This repository is a self-contained project **AI-Stylo** (powered by EvoPyramid init).
+Access to this repository and permission to commit changes is strictly restricted to:
+
+* [@AleeexTk](https://github.com/AleeexTk)
+* [@sergiiriabokon](https://github.com/sergiiriabokon)
+
+Direct access to the core `EvoPyramid` from this repository is intentionally restricted.
