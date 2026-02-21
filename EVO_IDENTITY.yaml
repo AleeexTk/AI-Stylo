@@ -1,0 +1,13 @@
+# EvoPyramid Identity Manifest
+role: Project_AI_Stylo
+version: "1.0.0"
+description: "AI-Stylo - Personal Fashion OS"
+type: "standalone_app"
+capabilities:
+  - user_profiling
+  - fashion_embedding
+  - outfit_generation
+security:
+  isolation_level: "high"
+  allowed_core_imports: ["models", "utils"]
+  quarantine_enabled: true
