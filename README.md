@@ -1,6 +1,6 @@
 # 🧬 AI-Stylo Core: Personal Fashion OS
 
-**AI Outfit Engine & Gamification Integration Layer**
+## AI Outfit Engine & Gamification Integration Layer
 
 AI-Stylo is a system built under the **EvoPyramid "Architecture of Architectures"** paradigm.
 It provides a robust core for fashion personalization, separating the business logic (Contracts, Emdeddings, Telemetry, Gamification) from the visual presentation layer (Vertex).
