@@ -5,7 +5,7 @@ from pathlib import Path
 def main():
     """Point of entry for AI-Stylo. Resolves path and launches streamlit app."""
     project_root = Path(__file__).parent.resolve()
-    app_path = project_root / "apps" / "web" / "app.py"
+    app_path = project_root / "apps" / "web" / "streamlit_rpg" / "app.py"
     
     if not app_path.exists():
         print(f"Error: Could not find main application at {app_path}")
