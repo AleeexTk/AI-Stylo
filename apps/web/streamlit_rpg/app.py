@@ -9,20 +9,6 @@ import hashlib
 import json
 import random
 
-# Добавление корневой директории в sys.path для импорта ядра
-project_root = Path(__file__).resolve().parent.parent.parent.parent
-if str(project_root) not in sys.path:
-    sys.path.append(str(project_root))
-
-from apps.core.skills_engine import (
-    SkillDef,
-    process_new_events,
-    unlock_and_update_skills,
-    get_skill_defs_for_catalog,
-    get_visible_skills,
-    ensure_skill_state
-)
-
 # Настройка страницы
 st.set_page_config(page_title="🧬 Personal Fashion OS | RPG", layout="wide", page_icon="🧬")
 st.title("🧬 Personal Fashion OS")
@@ -268,7 +254,7 @@ with left_col:
 
 with right_col:
     # ---------------- Вкладки (Control / DNA) ----------------
-    tab_ctrl, tab_dna = st.tabs(["⚙️ Panel", "🧬 Style DNA & Skills"])
+    tab_ctrl, tab_rag, tab_dna = st.tabs(["⚙️ Panel", "🤖 AI RAG (GDocs)", "🧬 Style DNA & Skills"])
 
     with tab_ctrl:
         st.markdown("**💰 Бюджет**")
@@ -324,6 +310,49 @@ with right_col:
                 if luxury_score > 1.0: log_event("luxury_action")
         else:
             st.info("Оберіть речі або згенеруйте образ")
+
+    with tab_rag:
+        st.subheader("💡 AI Скловод (RAG по Google Docs)")
+        st.caption("Інтеграція бази знань трендів через Google AI Studio.")
+        
+        user_msg = st.text_input("Напишіть запит", placeholder="Наприклад: що одягнути в офіс?")
+        if st.button("Запитати AI (Workflow)", use_container_width=True):
+            if user_msg.strip():
+                import sys, importlib
+                if 'apps.adapters.google_ai_adapter' not in sys.modules:
+                    from apps.adapters.google_ai_adapter import GoogleAIRAGAdapter
+                else:
+                    importlib.reload(sys.modules['apps.adapters.google_ai_adapter'])
+                    from apps.adapters.google_ai_adapter import GoogleAIRAGAdapter
+                
+                adapter = GoogleAIRAGAdapter()
+                with st.spinner("Звертаємось до Google Docs Workflow..."):
+                    rag_res = adapter.query_stylist(user_msg, profile)
+                
+                st.success(rag_res['text_response'])
+                st.caption(f"📚 {rag_res['source']}")
+                
+                # Застосовуємо поради від RAG
+                profile["style_pref"] = rag_res["system_suggestion"]["style"]
+                profile["budget_profile"]["max"] += rag_res["system_suggestion"]["budget_add"]
+                
+                # Симулюємо авто-генерацію образу на основі RAG-трендів
+                budget_range = (profile["budget_profile"]["min"], profile["budget_profile"]["max"])
+                log_event("rag_query_generate", {"text": user_msg, "suggested_style": profile["style_pref"]})
+                
+                candidates = [it for it in items if budget_range[0] <= it["price"] <= budget_range[1]]
+                tops = [it for it in candidates if it.get("category") == "top"]
+                bottoms = [it for it in candidates if it.get("category") == "bottom"]
+                shoes = [it for it in candidates if it.get("category") == "shoes"]
+                accs = [it for it in candidates if it.get("category") == "accessory"]
+
+                if tops: st.session_state.slots["top"] = random.choice(tops)["id"]
+                if bottoms: st.session_state.slots["bottom"] = random.choice(bottoms)["id"]
+                if shoes: st.session_state.slots["shoes"] = random.choice(shoes)["id"]
+                if accs: st.session_state.slots["accessory"] = random.choice(accs)["id"]
+                
+                st.info(f"✔️ Екіпіровка (слоти) миттєво оновлена під тренд '{profile['style_pref']}'")
+                st.rerun()
 
     with tab_dna:
         st.subheader("🧬 Твоє Style DNA")
